@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="8e3dbb2703fc4aecb566dc82010fc236" Name="Diagram1">
+        <EntityTypeShape EntityType="money_managementModel.account" Width="1.5" PointX="0.75" PointY="3.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="money_managementModel.account_money" Width="1.5" PointX="3" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="money_managementModel.base_money" Width="1.5" PointX="0.75" PointY="8.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="money_managementModel.category" Width="1.5" PointX="3.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="money_managementModel.tran" Width="1.5" PointX="6" PointY="3.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="money_managementModel.trans_detail" Width="1.5" PointX="8.25" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="money_managementModel.trans_type" Width="1.5" PointX="3.75" PointY="7.125" IsExpanded="true" />
+        <AssociationConnector Association="money_managementModel.FK_account_money_acc_id" ManuallyRouted="false" />
+        <AssociationConnector Association="money_managementModel.FK_trans_acc_id" ManuallyRouted="false" />
+        <AssociationConnector Association="money_managementModel.FK_account_money_bm_id" ManuallyRouted="false" />
+        <AssociationConnector Association="money_managementModel.FK_trans_detail_bm_id" ManuallyRouted="false" />
+        <AssociationConnector Association="money_managementModel.FK_trans_c_id" ManuallyRouted="false" />
+        <AssociationConnector Association="money_managementModel.FK_trans_detail_t_id" ManuallyRouted="false" />
+        <AssociationConnector Association="money_managementModel.FK_trans_type_id" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

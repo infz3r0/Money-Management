@@ -1,0 +1,487 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="money_managementModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="account">
+          <Key>
+            <PropertyRef Name="acc_id" />
+          </Key>
+          <Property Name="acc_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="acc_email" Type="varchar" MaxLength="200" />
+          <Property Name="acc_username" Type="varchar" MaxLength="50" />
+          <Property Name="acc_password" Type="varchar" MaxLength="32" />
+          <Property Name="acc_create_time" Type="datetime" />
+          <Property Name="acc_balance" Type="decimal" Precision="20" Scale="0" />
+          <Property Name="acc_verified" Type="bit" />
+        </EntityType>
+        <EntityType Name="account_money">
+          <Key>
+            <PropertyRef Name="acc_id" />
+            <PropertyRef Name="bm_id" />
+          </Key>
+          <Property Name="acc_id" Type="int" Nullable="false" />
+          <Property Name="bm_id" Type="int" Nullable="false" />
+          <Property Name="quantity" Type="int" />
+        </EntityType>
+        <EntityType Name="base_money">
+          <Key>
+            <PropertyRef Name="bm_id" />
+          </Key>
+          <Property Name="bm_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="bm_value" Type="int" />
+        </EntityType>
+        <EntityType Name="category">
+          <Key>
+            <PropertyRef Name="c_id" />
+          </Key>
+          <Property Name="c_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="c_value" Type="nvarchar" MaxLength="32" />
+        </EntityType>
+        <EntityType Name="trans">
+          <Key>
+            <PropertyRef Name="t_id" />
+          </Key>
+          <Property Name="t_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="t_date" Type="date" />
+          <Property Name="t_info" Type="nvarchar" MaxLength="200" />
+          <Property Name="type_id" Type="int" />
+          <Property Name="c_id" Type="int" />
+          <Property Name="acc_id" Type="int" />
+        </EntityType>
+        <EntityType Name="trans_detail">
+          <Key>
+            <PropertyRef Name="t_id" />
+          </Key>
+          <Property Name="t_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="bm_id" Type="int" />
+          <Property Name="t_quantity" Type="int" />
+        </EntityType>
+        <EntityType Name="trans_type">
+          <Key>
+            <PropertyRef Name="type_id" />
+          </Key>
+          <Property Name="type_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="type_value" Type="varchar" MaxLength="8" />
+        </EntityType>
+        <Association Name="FK_account_money_acc_id">
+          <End Role="account" Type="Self.account" Multiplicity="1" />
+          <End Role="account_money" Type="Self.account_money" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="account">
+              <PropertyRef Name="acc_id" />
+            </Principal>
+            <Dependent Role="account_money">
+              <PropertyRef Name="acc_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_account_money_bm_id">
+          <End Role="base_money" Type="Self.base_money" Multiplicity="1" />
+          <End Role="account_money" Type="Self.account_money" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="base_money">
+              <PropertyRef Name="bm_id" />
+            </Principal>
+            <Dependent Role="account_money">
+              <PropertyRef Name="bm_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_trans_acc_id">
+          <End Role="account" Type="Self.account" Multiplicity="0..1" />
+          <End Role="trans" Type="Self.trans" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="account">
+              <PropertyRef Name="acc_id" />
+            </Principal>
+            <Dependent Role="trans">
+              <PropertyRef Name="acc_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_trans_c_id">
+          <End Role="category" Type="Self.category" Multiplicity="0..1" />
+          <End Role="trans" Type="Self.trans" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="category">
+              <PropertyRef Name="c_id" />
+            </Principal>
+            <Dependent Role="trans">
+              <PropertyRef Name="c_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_trans_detail_bm_id">
+          <End Role="base_money" Type="Self.base_money" Multiplicity="0..1" />
+          <End Role="trans_detail" Type="Self.trans_detail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="base_money">
+              <PropertyRef Name="bm_id" />
+            </Principal>
+            <Dependent Role="trans_detail">
+              <PropertyRef Name="bm_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_trans_detail_t_id">
+          <End Role="trans" Type="Self.trans" Multiplicity="1" />
+          <End Role="trans_detail" Type="Self.trans_detail" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="trans">
+              <PropertyRef Name="t_id" />
+            </Principal>
+            <Dependent Role="trans_detail">
+              <PropertyRef Name="t_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_trans_type_id">
+          <End Role="trans_type" Type="Self.trans_type" Multiplicity="0..1" />
+          <End Role="trans" Type="Self.trans" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="trans_type">
+              <PropertyRef Name="type_id" />
+            </Principal>
+            <Dependent Role="trans">
+              <PropertyRef Name="type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="money_managementModelStoreContainer">
+          <EntitySet Name="account" EntityType="Self.account" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="account_money" EntityType="Self.account_money" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="base_money" EntityType="Self.base_money" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="category" EntityType="Self.category" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="trans" EntityType="Self.trans" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="trans_detail" EntityType="Self.trans_detail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="trans_type" EntityType="Self.trans_type" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_account_money_acc_id" Association="Self.FK_account_money_acc_id">
+            <End Role="account" EntitySet="account" />
+            <End Role="account_money" EntitySet="account_money" />
+          </AssociationSet>
+          <AssociationSet Name="FK_account_money_bm_id" Association="Self.FK_account_money_bm_id">
+            <End Role="base_money" EntitySet="base_money" />
+            <End Role="account_money" EntitySet="account_money" />
+          </AssociationSet>
+          <AssociationSet Name="FK_trans_acc_id" Association="Self.FK_trans_acc_id">
+            <End Role="account" EntitySet="account" />
+            <End Role="trans" EntitySet="trans" />
+          </AssociationSet>
+          <AssociationSet Name="FK_trans_c_id" Association="Self.FK_trans_c_id">
+            <End Role="category" EntitySet="category" />
+            <End Role="trans" EntitySet="trans" />
+          </AssociationSet>
+          <AssociationSet Name="FK_trans_detail_bm_id" Association="Self.FK_trans_detail_bm_id">
+            <End Role="base_money" EntitySet="base_money" />
+            <End Role="trans_detail" EntitySet="trans_detail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_trans_detail_t_id" Association="Self.FK_trans_detail_t_id">
+            <End Role="trans" EntitySet="trans" />
+            <End Role="trans_detail" EntitySet="trans_detail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_trans_type_id" Association="Self.FK_trans_type_id">
+            <End Role="trans_type" EntitySet="trans_type" />
+            <End Role="trans" EntitySet="trans" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="money_managementModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="account">
+          <Key>
+            <PropertyRef Name="acc_id" />
+          </Key>
+          <Property Name="acc_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="acc_email" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="acc_username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="acc_password" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="acc_create_time" Type="DateTime" Precision="3" />
+          <Property Name="acc_balance" Type="Decimal" Precision="20" Scale="0" />
+          <Property Name="acc_verified" Type="Boolean" />
+          <NavigationProperty Name="account_money" Relationship="Self.FK_account_money_acc_id" FromRole="account" ToRole="account_money" />
+          <NavigationProperty Name="trans" Relationship="Self.FK_trans_acc_id" FromRole="account" ToRole="trans" />
+        </EntityType>
+        <EntityType Name="account_money">
+          <Key>
+            <PropertyRef Name="acc_id" />
+            <PropertyRef Name="bm_id" />
+          </Key>
+          <Property Name="acc_id" Type="Int32" Nullable="false" />
+          <Property Name="bm_id" Type="Int32" Nullable="false" />
+          <Property Name="quantity" Type="Int32" />
+          <NavigationProperty Name="account" Relationship="Self.FK_account_money_acc_id" FromRole="account_money" ToRole="account" />
+          <NavigationProperty Name="base_money" Relationship="Self.FK_account_money_bm_id" FromRole="account_money" ToRole="base_money" />
+        </EntityType>
+        <EntityType Name="base_money">
+          <Key>
+            <PropertyRef Name="bm_id" />
+          </Key>
+          <Property Name="bm_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="bm_value" Type="Int32" />
+          <NavigationProperty Name="account_money" Relationship="Self.FK_account_money_bm_id" FromRole="base_money" ToRole="account_money" />
+          <NavigationProperty Name="trans_detail" Relationship="Self.FK_trans_detail_bm_id" FromRole="base_money" ToRole="trans_detail" />
+        </EntityType>
+        <EntityType Name="category">
+          <Key>
+            <PropertyRef Name="c_id" />
+          </Key>
+          <Property Name="c_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="c_value" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="trans" Relationship="Self.FK_trans_c_id" FromRole="category" ToRole="trans" />
+        </EntityType>
+        <EntityType Name="tran">
+          <Key>
+            <PropertyRef Name="t_id" />
+          </Key>
+          <Property Name="t_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="t_date" Type="DateTime" Precision="0" />
+          <Property Name="t_info" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="type_id" Type="Int32" />
+          <Property Name="c_id" Type="Int32" />
+          <Property Name="acc_id" Type="Int32" />
+          <NavigationProperty Name="account" Relationship="Self.FK_trans_acc_id" FromRole="trans" ToRole="account" />
+          <NavigationProperty Name="category" Relationship="Self.FK_trans_c_id" FromRole="trans" ToRole="category" />
+          <NavigationProperty Name="trans_detail" Relationship="Self.FK_trans_detail_t_id" FromRole="trans" ToRole="trans_detail" />
+          <NavigationProperty Name="trans_type" Relationship="Self.FK_trans_type_id" FromRole="trans" ToRole="trans_type" />
+        </EntityType>
+        <EntityType Name="trans_detail">
+          <Key>
+            <PropertyRef Name="t_id" />
+          </Key>
+          <Property Name="t_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="bm_id" Type="Int32" />
+          <Property Name="t_quantity" Type="Int32" />
+          <NavigationProperty Name="base_money" Relationship="Self.FK_trans_detail_bm_id" FromRole="trans_detail" ToRole="base_money" />
+          <NavigationProperty Name="tran" Relationship="Self.FK_trans_detail_t_id" FromRole="trans_detail" ToRole="trans" />
+        </EntityType>
+        <EntityType Name="trans_type">
+          <Key>
+            <PropertyRef Name="type_id" />
+          </Key>
+          <Property Name="type_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="type_value" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="trans" Relationship="Self.FK_trans_type_id" FromRole="trans_type" ToRole="trans" />
+        </EntityType>
+        <Association Name="FK_account_money_acc_id">
+          <End Role="account" Type="Self.account" Multiplicity="1" />
+          <End Role="account_money" Type="Self.account_money" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="account">
+              <PropertyRef Name="acc_id" />
+            </Principal>
+            <Dependent Role="account_money">
+              <PropertyRef Name="acc_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_trans_acc_id">
+          <End Role="account" Type="Self.account" Multiplicity="0..1" />
+          <End Role="trans" Type="Self.tran" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="account">
+              <PropertyRef Name="acc_id" />
+            </Principal>
+            <Dependent Role="trans">
+              <PropertyRef Name="acc_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_account_money_bm_id">
+          <End Role="base_money" Type="Self.base_money" Multiplicity="1" />
+          <End Role="account_money" Type="Self.account_money" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="base_money">
+              <PropertyRef Name="bm_id" />
+            </Principal>
+            <Dependent Role="account_money">
+              <PropertyRef Name="bm_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_trans_detail_bm_id">
+          <End Role="base_money" Type="Self.base_money" Multiplicity="0..1" />
+          <End Role="trans_detail" Type="Self.trans_detail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="base_money">
+              <PropertyRef Name="bm_id" />
+            </Principal>
+            <Dependent Role="trans_detail">
+              <PropertyRef Name="bm_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_trans_c_id">
+          <End Role="category" Type="Self.category" Multiplicity="0..1" />
+          <End Role="trans" Type="Self.tran" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="category">
+              <PropertyRef Name="c_id" />
+            </Principal>
+            <Dependent Role="trans">
+              <PropertyRef Name="c_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_trans_detail_t_id">
+          <End Role="trans" Type="Self.tran" Multiplicity="1" />
+          <End Role="trans_detail" Type="Self.trans_detail" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="trans">
+              <PropertyRef Name="t_id" />
+            </Principal>
+            <Dependent Role="trans_detail">
+              <PropertyRef Name="t_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_trans_type_id">
+          <End Role="trans_type" Type="Self.trans_type" Multiplicity="0..1" />
+          <End Role="trans" Type="Self.tran" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="trans_type">
+              <PropertyRef Name="type_id" />
+            </Principal>
+            <Dependent Role="trans">
+              <PropertyRef Name="type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="money_managementEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="accounts" EntityType="Self.account" />
+          <EntitySet Name="account_money" EntityType="Self.account_money" />
+          <EntitySet Name="base_money" EntityType="Self.base_money" />
+          <EntitySet Name="categories" EntityType="Self.category" />
+          <EntitySet Name="trans" EntityType="Self.tran" />
+          <EntitySet Name="trans_detail" EntityType="Self.trans_detail" />
+          <EntitySet Name="trans_type" EntityType="Self.trans_type" />
+          <AssociationSet Name="FK_account_money_acc_id" Association="Self.FK_account_money_acc_id">
+            <End Role="account" EntitySet="accounts" />
+            <End Role="account_money" EntitySet="account_money" />
+          </AssociationSet>
+          <AssociationSet Name="FK_trans_acc_id" Association="Self.FK_trans_acc_id">
+            <End Role="account" EntitySet="accounts" />
+            <End Role="trans" EntitySet="trans" />
+          </AssociationSet>
+          <AssociationSet Name="FK_account_money_bm_id" Association="Self.FK_account_money_bm_id">
+            <End Role="base_money" EntitySet="base_money" />
+            <End Role="account_money" EntitySet="account_money" />
+          </AssociationSet>
+          <AssociationSet Name="FK_trans_detail_bm_id" Association="Self.FK_trans_detail_bm_id">
+            <End Role="base_money" EntitySet="base_money" />
+            <End Role="trans_detail" EntitySet="trans_detail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_trans_c_id" Association="Self.FK_trans_c_id">
+            <End Role="category" EntitySet="categories" />
+            <End Role="trans" EntitySet="trans" />
+          </AssociationSet>
+          <AssociationSet Name="FK_trans_detail_t_id" Association="Self.FK_trans_detail_t_id">
+            <End Role="trans" EntitySet="trans" />
+            <End Role="trans_detail" EntitySet="trans_detail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_trans_type_id" Association="Self.FK_trans_type_id">
+            <End Role="trans_type" EntitySet="trans_type" />
+            <End Role="trans" EntitySet="trans" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="money_managementModelStoreContainer" CdmEntityContainer="money_managementEntities">
+          <EntitySetMapping Name="accounts">
+            <EntityTypeMapping TypeName="money_managementModel.account">
+              <MappingFragment StoreEntitySet="account">
+                <ScalarProperty Name="acc_id" ColumnName="acc_id" />
+                <ScalarProperty Name="acc_email" ColumnName="acc_email" />
+                <ScalarProperty Name="acc_username" ColumnName="acc_username" />
+                <ScalarProperty Name="acc_password" ColumnName="acc_password" />
+                <ScalarProperty Name="acc_create_time" ColumnName="acc_create_time" />
+                <ScalarProperty Name="acc_balance" ColumnName="acc_balance" />
+                <ScalarProperty Name="acc_verified" ColumnName="acc_verified" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="account_money">
+            <EntityTypeMapping TypeName="money_managementModel.account_money">
+              <MappingFragment StoreEntitySet="account_money">
+                <ScalarProperty Name="acc_id" ColumnName="acc_id" />
+                <ScalarProperty Name="bm_id" ColumnName="bm_id" />
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="base_money">
+            <EntityTypeMapping TypeName="money_managementModel.base_money">
+              <MappingFragment StoreEntitySet="base_money">
+                <ScalarProperty Name="bm_id" ColumnName="bm_id" />
+                <ScalarProperty Name="bm_value" ColumnName="bm_value" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="categories">
+            <EntityTypeMapping TypeName="money_managementModel.category">
+              <MappingFragment StoreEntitySet="category">
+                <ScalarProperty Name="c_id" ColumnName="c_id" />
+                <ScalarProperty Name="c_value" ColumnName="c_value" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="trans">
+            <EntityTypeMapping TypeName="money_managementModel.tran">
+              <MappingFragment StoreEntitySet="trans">
+                <ScalarProperty Name="t_id" ColumnName="t_id" />
+                <ScalarProperty Name="t_date" ColumnName="t_date" />
+                <ScalarProperty Name="t_info" ColumnName="t_info" />
+                <ScalarProperty Name="type_id" ColumnName="type_id" />
+                <ScalarProperty Name="c_id" ColumnName="c_id" />
+                <ScalarProperty Name="acc_id" ColumnName="acc_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="trans_detail">
+            <EntityTypeMapping TypeName="money_managementModel.trans_detail">
+              <MappingFragment StoreEntitySet="trans_detail">
+                <ScalarProperty Name="t_id" ColumnName="t_id" />
+                <ScalarProperty Name="bm_id" ColumnName="bm_id" />
+                <ScalarProperty Name="t_quantity" ColumnName="t_quantity" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="trans_type">
+            <EntityTypeMapping TypeName="money_managementModel.trans_type">
+              <MappingFragment StoreEntitySet="trans_type">
+                <ScalarProperty Name="type_id" ColumnName="type_id" />
+                <ScalarProperty Name="type_value" ColumnName="type_value" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
