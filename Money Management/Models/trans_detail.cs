@@ -15,7 +15,7 @@ namespace Money_Management.Models
     public partial class trans_detail
     {
         public int t_id { get; set; }
-        public Nullable<int> bm_id { get; set; }
+        public int bm_id { get; set; }
         public Nullable<int> t_quantity { get; set; }
     
         public virtual base_money base_money { get; set; }

@@ -14,16 +14,24 @@ namespace Money_Management.Models
     
     public partial class tran
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public tran()
+        {
+            this.trans_detail = new HashSet<trans_detail>();
+        }
+    
         public int t_id { get; set; }
         public Nullable<System.DateTime> t_date { get; set; }
         public string t_info { get; set; }
         public Nullable<int> type_id { get; set; }
         public Nullable<int> c_id { get; set; }
         public Nullable<int> acc_id { get; set; }
+        public Nullable<decimal> t_sum { get; set; }
     
         public virtual account account { get; set; }
         public virtual category category { get; set; }
-        public virtual trans_detail trans_detail { get; set; }
         public virtual trans_type trans_type { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<trans_detail> trans_detail { get; set; }
     }
 }

@@ -10,15 +10,15 @@
         <EntityTypeShape EntityType="money_managementModel.base_money" Width="1.5" PointX="0.75" PointY="8.875" IsExpanded="true" />
         <EntityTypeShape EntityType="money_managementModel.category" Width="1.5" PointX="3.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="money_managementModel.tran" Width="1.5" PointX="6" PointY="3.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="money_managementModel.trans_detail" Width="1.5" PointX="8.25" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="money_managementModel.trans_type" Width="1.5" PointX="3.75" PointY="7.125" IsExpanded="true" />
         <AssociationConnector Association="money_managementModel.FK_account_money_acc_id" ManuallyRouted="false" />
         <AssociationConnector Association="money_managementModel.FK_trans_acc_id" ManuallyRouted="false" />
         <AssociationConnector Association="money_managementModel.FK_account_money_bm_id" ManuallyRouted="false" />
-        <AssociationConnector Association="money_managementModel.FK_trans_detail_bm_id" ManuallyRouted="false" />
         <AssociationConnector Association="money_managementModel.FK_trans_c_id" ManuallyRouted="false" />
-        <AssociationConnector Association="money_managementModel.FK_trans_detail_t_id" ManuallyRouted="false" />
         <AssociationConnector Association="money_managementModel.FK_trans_type_id" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="money_managementModel.trans_detail" Width="1.5" PointX="8.25" PointY="6" />
+        <AssociationConnector Association="money_managementModel.FK_trans_detail_bm_id" />
+        <AssociationConnector Association="money_managementModel.FK_trans_detail_t_id" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

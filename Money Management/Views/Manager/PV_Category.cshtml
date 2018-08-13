@@ -1,0 +1,9 @@
+﻿@using Money_Management.Models
+@model List<category>
+
+<select name="category" class="form-control" required>
+    @foreach (category c in Model)
+    {
+    <option value="@c.c_id">@c.c_value</option>
+    }
+</select>

@@ -348,6 +348,10 @@
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Shared\_LayoutManager.cshtml" />
     <Content Include="Views\Manager\Index.cshtml" />
+    <Content Include="Views\Manager\Transaction.cshtml" />
+    <Content Include="Views\Manager\PV_Category.cshtml" />
+    <Content Include="Views\Manager\PV_BaseMoney.cshtml" />
+    <Content Include="Views\Manager\PV_TransType.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

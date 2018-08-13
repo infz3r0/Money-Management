@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="money_managementModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="money_managementModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="account">
           <Key>
             <PropertyRef Name="acc_id" />
@@ -50,13 +50,15 @@
           <Property Name="type_id" Type="int" />
           <Property Name="c_id" Type="int" />
           <Property Name="acc_id" Type="int" />
+          <Property Name="t_sum" Type="decimal" Precision="20" Scale="0" />
         </EntityType>
         <EntityType Name="trans_detail">
           <Key>
             <PropertyRef Name="t_id" />
+            <PropertyRef Name="bm_id" />
           </Key>
-          <Property Name="t_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="bm_id" Type="int" />
+          <Property Name="t_id" Type="int" Nullable="false" />
+          <Property Name="bm_id" Type="int" Nullable="false" />
           <Property Name="t_quantity" Type="int" />
         </EntityType>
         <EntityType Name="trans_type">
@@ -115,7 +117,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_trans_detail_bm_id">
-          <End Role="base_money" Type="Self.base_money" Multiplicity="0..1" />
+          <End Role="base_money" Type="Self.base_money" Multiplicity="1" />
           <End Role="trans_detail" Type="Self.trans_detail" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="base_money">
@@ -128,7 +130,7 @@
         </Association>
         <Association Name="FK_trans_detail_t_id">
           <End Role="trans" Type="Self.trans" Multiplicity="1" />
-          <End Role="trans_detail" Type="Self.trans_detail" Multiplicity="0..1" />
+          <End Role="trans_detail" Type="Self.trans_detail" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="trans">
               <PropertyRef Name="t_id" />
@@ -150,6 +152,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="P_UpdateQuantityAfterTrans" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="money_managementModelStoreContainer">
           <EntitySet Name="account" EntityType="Self.account" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="account_money" EntityType="Self.account_money" Schema="dbo" store:Type="Tables" />
@@ -187,8 +190,7 @@
             <End Role="trans" EntitySet="trans" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="money_managementModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -224,7 +226,7 @@
           <Property Name="bm_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="bm_value" Type="Int32" />
           <NavigationProperty Name="account_money" Relationship="Self.FK_account_money_bm_id" FromRole="base_money" ToRole="account_money" />
-          <NavigationProperty Name="trans_detail" Relationship="Self.FK_trans_detail_bm_id" FromRole="base_money" ToRole="trans_detail" />
+          <NavigationProperty Name="trans_detail" Relationship="money_managementModel.FK_trans_detail_bm_id" FromRole="base_money" ToRole="trans_detail" />
         </EntityType>
         <EntityType Name="category">
           <Key>
@@ -246,18 +248,9 @@
           <Property Name="acc_id" Type="Int32" />
           <NavigationProperty Name="account" Relationship="Self.FK_trans_acc_id" FromRole="trans" ToRole="account" />
           <NavigationProperty Name="category" Relationship="Self.FK_trans_c_id" FromRole="trans" ToRole="category" />
-          <NavigationProperty Name="trans_detail" Relationship="Self.FK_trans_detail_t_id" FromRole="trans" ToRole="trans_detail" />
           <NavigationProperty Name="trans_type" Relationship="Self.FK_trans_type_id" FromRole="trans" ToRole="trans_type" />
-        </EntityType>
-        <EntityType Name="trans_detail">
-          <Key>
-            <PropertyRef Name="t_id" />
-          </Key>
-          <Property Name="t_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="bm_id" Type="Int32" />
-          <Property Name="t_quantity" Type="Int32" />
-          <NavigationProperty Name="base_money" Relationship="Self.FK_trans_detail_bm_id" FromRole="trans_detail" ToRole="base_money" />
-          <NavigationProperty Name="tran" Relationship="Self.FK_trans_detail_t_id" FromRole="trans_detail" ToRole="trans" />
+          <Property Name="t_sum" Type="Decimal" Precision="20" Scale="0" />
+          <NavigationProperty Name="trans_detail" Relationship="money_managementModel.FK_trans_detail_t_id" FromRole="tran" ToRole="trans_detail" />
         </EntityType>
         <EntityType Name="trans_type">
           <Key>
@@ -303,18 +296,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_trans_detail_bm_id">
-          <End Role="base_money" Type="Self.base_money" Multiplicity="0..1" />
-          <End Role="trans_detail" Type="Self.trans_detail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="base_money">
-              <PropertyRef Name="bm_id" />
-            </Principal>
-            <Dependent Role="trans_detail">
-              <PropertyRef Name="bm_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_trans_c_id">
           <End Role="category" Type="Self.category" Multiplicity="0..1" />
           <End Role="trans" Type="Self.tran" Multiplicity="*" />
@@ -324,18 +305,6 @@
             </Principal>
             <Dependent Role="trans">
               <PropertyRef Name="c_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_trans_detail_t_id">
-          <End Role="trans" Type="Self.tran" Multiplicity="1" />
-          <End Role="trans_detail" Type="Self.trans_detail" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="trans">
-              <PropertyRef Name="t_id" />
-            </Principal>
-            <Dependent Role="trans_detail">
-              <PropertyRef Name="t_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -357,7 +326,6 @@
           <EntitySet Name="base_money" EntityType="Self.base_money" />
           <EntitySet Name="categories" EntityType="Self.category" />
           <EntitySet Name="trans" EntityType="Self.tran" />
-          <EntitySet Name="trans_detail" EntityType="Self.trans_detail" />
           <EntitySet Name="trans_type" EntityType="Self.trans_type" />
           <AssociationSet Name="FK_account_money_acc_id" Association="Self.FK_account_money_acc_id">
             <End Role="account" EntitySet="accounts" />
@@ -371,23 +339,60 @@
             <End Role="base_money" EntitySet="base_money" />
             <End Role="account_money" EntitySet="account_money" />
           </AssociationSet>
-          <AssociationSet Name="FK_trans_detail_bm_id" Association="Self.FK_trans_detail_bm_id">
-            <End Role="base_money" EntitySet="base_money" />
-            <End Role="trans_detail" EntitySet="trans_detail" />
-          </AssociationSet>
           <AssociationSet Name="FK_trans_c_id" Association="Self.FK_trans_c_id">
             <End Role="category" EntitySet="categories" />
             <End Role="trans" EntitySet="trans" />
-          </AssociationSet>
-          <AssociationSet Name="FK_trans_detail_t_id" Association="Self.FK_trans_detail_t_id">
-            <End Role="trans" EntitySet="trans" />
-            <End Role="trans_detail" EntitySet="trans_detail" />
           </AssociationSet>
           <AssociationSet Name="FK_trans_type_id" Association="Self.FK_trans_type_id">
             <End Role="trans_type" EntitySet="trans_type" />
             <End Role="trans" EntitySet="trans" />
           </AssociationSet>
+          <EntitySet Name="trans_detail" EntityType="money_managementModel.trans_detail" />
+          <AssociationSet Name="FK_trans_detail_bm_id" Association="money_managementModel.FK_trans_detail_bm_id">
+            <End Role="base_money" EntitySet="base_money" />
+            <End Role="trans_detail" EntitySet="trans_detail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_trans_detail_t_id" Association="money_managementModel.FK_trans_detail_t_id">
+            <End Role="tran" EntitySet="trans" />
+            <End Role="trans_detail" EntitySet="trans_detail" />
+          </AssociationSet>
+          <FunctionImport Name="P_UpdateQuantityAfterTrans" />
         </EntityContainer>
+        <EntityType Name="trans_detail">
+          <Key>
+            <PropertyRef Name="t_id" />
+            <PropertyRef Name="bm_id" />
+          </Key>
+          <Property Name="t_id" Type="Int32" Nullable="false" />
+          <Property Name="bm_id" Type="Int32" Nullable="false" />
+          <Property Name="t_quantity" Type="Int32" />
+          <NavigationProperty Name="base_money" Relationship="money_managementModel.FK_trans_detail_bm_id" FromRole="trans_detail" ToRole="base_money" />
+          <NavigationProperty Name="tran" Relationship="money_managementModel.FK_trans_detail_t_id" FromRole="trans_detail" ToRole="tran" />
+        </EntityType>
+        <Association Name="FK_trans_detail_bm_id">
+          <End Type="money_managementModel.base_money" Role="base_money" Multiplicity="1" />
+          <End Type="money_managementModel.trans_detail" Role="trans_detail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="base_money">
+              <PropertyRef Name="bm_id" />
+            </Principal>
+            <Dependent Role="trans_detail">
+              <PropertyRef Name="bm_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_trans_detail_t_id">
+          <End Type="money_managementModel.tran" Role="tran" Multiplicity="1" />
+          <End Type="money_managementModel.trans_detail" Role="trans_detail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tran">
+              <PropertyRef Name="t_id" />
+            </Principal>
+            <Dependent Role="trans_detail">
+              <PropertyRef Name="t_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -435,21 +440,13 @@
           <EntitySetMapping Name="trans">
             <EntityTypeMapping TypeName="money_managementModel.tran">
               <MappingFragment StoreEntitySet="trans">
+                <ScalarProperty Name="t_sum" ColumnName="t_sum" />
                 <ScalarProperty Name="t_id" ColumnName="t_id" />
                 <ScalarProperty Name="t_date" ColumnName="t_date" />
                 <ScalarProperty Name="t_info" ColumnName="t_info" />
                 <ScalarProperty Name="type_id" ColumnName="type_id" />
                 <ScalarProperty Name="c_id" ColumnName="c_id" />
                 <ScalarProperty Name="acc_id" ColumnName="acc_id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="trans_detail">
-            <EntityTypeMapping TypeName="money_managementModel.trans_detail">
-              <MappingFragment StoreEntitySet="trans_detail">
-                <ScalarProperty Name="t_id" ColumnName="t_id" />
-                <ScalarProperty Name="bm_id" ColumnName="bm_id" />
-                <ScalarProperty Name="t_quantity" ColumnName="t_quantity" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -461,6 +458,16 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="trans_detail">
+            <EntityTypeMapping TypeName="money_managementModel.trans_detail">
+              <MappingFragment StoreEntitySet="trans_detail">
+                <ScalarProperty Name="t_quantity" ColumnName="t_quantity" />
+                <ScalarProperty Name="bm_id" ColumnName="bm_id" />
+                <ScalarProperty Name="t_id" ColumnName="t_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="P_UpdateQuantityAfterTrans" FunctionName="money_managementModel.Store.P_UpdateQuantityAfterTrans" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

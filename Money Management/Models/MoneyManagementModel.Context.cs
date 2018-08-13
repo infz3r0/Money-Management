@@ -12,6 +12,8 @@ namespace Money_Management.Models
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class money_managementEntities : DbContext
     {
@@ -30,7 +32,12 @@ namespace Money_Management.Models
         public virtual DbSet<base_money> base_money { get; set; }
         public virtual DbSet<category> categories { get; set; }
         public virtual DbSet<tran> trans { get; set; }
-        public virtual DbSet<trans_detail> trans_detail { get; set; }
         public virtual DbSet<trans_type> trans_type { get; set; }
+        public virtual DbSet<trans_detail> trans_detail { get; set; }
+    
+        public virtual int P_UpdateQuantityAfterTrans()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_UpdateQuantityAfterTrans");
+        }
     }
 }

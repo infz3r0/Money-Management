@@ -1,8 +1,41 @@
 ﻿
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Manager";
     Layout = "~/Views/Shared/_LayoutManager.cshtml";
 }
+@using Money_Management.Models
+@model List<account_money>
 
-<h2>Index</h2>
+<div class="row">
+    <div class="col-12">
+        <h2 class="text-center">Account Manager</h2>
+        <h3 class="text-center">Balance: @String.Format("{0:N0} VND", ViewBag.Balance)</h3>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-4">
+        <table class="table table-sm table-responsive">
+            <thead class="thead-dark">
+                <tr>
+                    <th class="text-center">Money</th>
+                    <th class="text-center">Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (account_money am in Model)
+                {
+                    <tr>
+                        <td class="text-center">
+                            @String.Format("{0:N0} VND", am.base_money.bm_value)
+                        </td>
+                        <td class="text-center">
+                            @am.quantity
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 

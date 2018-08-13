@@ -1,0 +1,9 @@
+﻿@using Money_Management.Models
+@model List<trans_type>
+
+<select name="trans_type" class="form-control" required>
+    @foreach (trans_type c in Model)
+    {
+        <option value="@c.type_id">@c.type_value</option>
+    }
+</select>

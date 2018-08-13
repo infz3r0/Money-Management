@@ -1,0 +1,78 @@
+﻿
+@{
+    ViewBag.Title = "Transaction";
+    Layout = "~/Views/Shared/_LayoutManager.cshtml";
+}
+@using Money_Management.Models
+@model List<base_money>
+
+<h2 class="text-center">New Transaction</h2>
+<p class="alert-danger text-center" role="alert">
+    @ViewBag.Alert
+</p>
+
+<div class="row">
+    <div class="col-12">
+        @using (Html.BeginForm("Transaction", "Manager", FormMethod.Post))
+        {
+            <div class="form-row">
+                <div class="form-group col-4">
+                    <label for="trans_type">Type</label>
+                    @Html.Action("PV_TransType")
+                </div>
+                <div class="form-group col-4">
+                    <label for="category">Category</label>
+                    @Html.Action("PV_Category")
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-12">
+                    <label for="info">Info</label>
+                    <input type="text" class="form-control" name="info" placeholder="..." autofocus>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-12">
+                    <label>Quantity</label>
+                </div>
+            </div>
+            @Html.Action("PV_BaseMoney")
+            <hr />
+            <div class="form-row">
+                <div class="form-group col-4">
+                    <label for="amount">Amount</label>
+                    <input type="text" class="form-control" name="amount" id="amount" placeholder="0" min="0" readonly>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        }
+    </div>
+</div>
+
+@section scripts {
+
+    <script>
+        function getAmount() {
+            @{
+                @:var sum = 0;
+                foreach (base_money bm in Model)
+                {
+                    @:var q =$("#Q_@bm.bm_value").val();
+                    @:sum = sum + q * @bm.bm_value;
+                }                
+
+                @:$('#amount').val(sum.toLocaleString());
+            }
+        }
+
+        $(document).ready(function () {
+
+            $(".quantity").change(function () {
+                getAmount();
+            });
+
+        });
+
+    </script>
+
+} 

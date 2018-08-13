@@ -33,14 +33,17 @@ namespace Money_Management.Controllers
             string password = form["acc_password"];
 
             // Check try login
-            using (var db = new money_managementEntities())
+            if (ModelState.IsValid)
             {
-                account acc = db.accounts.FirstOrDefault(x => x.acc_username.Equals(username));
-                if (acc != null && MD5Cal.VerifyMd5Hash(password, acc.acc_password))
+                using (var db = new money_managementEntities())
                 {
-                    Session["Account"] = acc;
-                    return RedirectToAction("Index", "Manager");
-                }                
+                    account acc = db.accounts.FirstOrDefault(x => x.acc_username.Equals(username));
+                    if (acc != null && MD5Cal.VerifyMd5Hash(password, acc.acc_password))
+                    {
+                        Session["Account"] = acc;
+                        return RedirectToAction("Index", "Manager");
+                    }
+                }
             }
 
             return View();
@@ -67,24 +70,30 @@ namespace Money_Management.Controllers
             }
 
             // Check username exists
-            using (var db = new money_managementEntities())
+            if (ModelState.IsValid)
             {
-                account acc = db.accounts.FirstOrDefault(x => x.acc_username.Equals(username));
-                if (acc != null)
+                using (var db = new money_managementEntities())
                 {
-                    ViewBag.Alert = "Username already exists.";
-                    return View();
+                    account acc = db.accounts.FirstOrDefault(x => x.acc_username.Equals(username));
+                    if (acc != null)
+                    {
+                        ViewBag.Alert = "Username already exists.";
+                        return View();
+                    }
                 }
             }
 
             // Check email exists
-            using (var db = new money_managementEntities())
+            if (ModelState.IsValid)
             {
-                account acc = db.accounts.FirstOrDefault(x => x.acc_email.Equals(email));
-                if (acc != null)
+                using (var db = new money_managementEntities())
                 {
-                    ViewBag.Alert = "Email already exists.";
-                    return View();
+                    account acc = db.accounts.FirstOrDefault(x => x.acc_email.Equals(email));
+                    if (acc != null)
+                    {
+                        ViewBag.Alert = "Email already exists.";
+                        return View();
+                    }
                 }
             }
 
@@ -99,13 +108,32 @@ namespace Money_Management.Controllers
                 acc_verified = false
             };
 
-            using (var db = new money_managementEntities())
+            if (ModelState.IsValid)
             {
-                db.accounts.Add(new_acc);
-                db.SaveChanges();
+                using (var db = new money_managementEntities())
+                {
+                    db.accounts.Add(new_acc);
+                    db.SaveChanges();
+                }
             }
+            
 
             return RedirectToAction("Login");
         }
+
+        public ActionResult Logout()
+        {
+            if (Session["Account"] != null)
+            {
+                Session.Clear();                
+            }
+            return RedirectToAction("Login");
+        }
+
+
+
+
+
+        //end class
     }
 }
