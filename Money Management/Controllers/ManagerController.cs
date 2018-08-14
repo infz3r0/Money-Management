@@ -182,6 +182,21 @@ namespace Money_Management.Controllers
             return PartialView(bm);
         }
 
+        public ActionResult PV_TableTrans()
+        {
+            int aid = ((account)Session["Account"]).acc_id;
+            List<tran> trans = null;
+
+            if (ModelState.IsValid)
+            {
+                using (var db = new money_managementEntities())
+                {
+                    trans = db.trans.Include("trans_type").Include("category").Take(10).OrderByDescending(x=>x.t_date).OrderByDescending(x=>x.t_id).ToList();
+                }
+            }
+
+            return PartialView(trans);
+        }
         #endregion
 
         //end class

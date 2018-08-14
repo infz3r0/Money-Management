@@ -14,7 +14,7 @@
 </div>
 
 <div class="row">
-    <div class="col-4">
+    <div class="col-2">
         <table class="table table-sm table-responsive">
             <thead class="thead-dark">
                 <tr>
@@ -37,5 +37,27 @@
             </tbody>
         </table>
     </div>
+    <div class="col-10">
+        @Html.Action("PV_TableTrans")
+    </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Transaction Detail</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

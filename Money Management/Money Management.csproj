@@ -352,6 +352,7 @@
     <Content Include="Views\Manager\PV_Category.cshtml" />
     <Content Include="Views\Manager\PV_BaseMoney.cshtml" />
     <Content Include="Views\Manager\PV_TransType.cshtml" />
+    <Content Include="Views\Manager\PV_TableTrans.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -387,7 +388,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>32491</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:32491/</IISUrl>
+          <IISUrl>http://localhost:32492/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

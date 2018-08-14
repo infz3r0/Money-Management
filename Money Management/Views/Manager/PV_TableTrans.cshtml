@@ -1,0 +1,44 @@
+﻿@using Money_Management.Models
+@model List<tran>
+
+<table class="table table-responsive">
+    <thead class="thead-dark">
+        <tr>
+            <th class="text-center">Type</th>
+            <th class="text-center">Date</th>
+            <th class="text-center">Amount</th>
+            <th class="text-center">Category</th>
+            <th class="text-center">Info</th>
+            <th class="text-center"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (tran t in Model)
+        {
+        <tr>
+            <td class="text-center">
+                @t.trans_type.type_value
+            </td>
+            <td class="text-center">
+                @String.Format("{0:MMM dd yyyy}", t.t_date)
+            </td>
+            <td class="text-center">
+                @String.Format("{0:N0} VND", t.t_sum)
+            </td>
+            <td class="text-center">
+                @t.category.c_value
+            </td>
+            <td class="text-center">
+                @t.t_info
+            </td>
+            <td class="text-center">
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#detailModal">
+                    View
+                </button>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
