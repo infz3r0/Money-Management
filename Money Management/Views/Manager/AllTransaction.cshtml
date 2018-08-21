@@ -1,0 +1,100 @@
+﻿@using Money_Management.Models;
+@model PagedList.IPagedList<tran>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Transactions";
+    Layout = "~/Views/Shared/_LayoutManager.cshtml";
+}
+
+<h2 class="text-center">Transactions</h2>
+
+<table class="table table-hover">
+    <thead class="thead-dark">
+        <tr>
+            <th class="text-center">Type</th>
+            <th class="text-center">Date</th>
+            <th class="text-center">Amount</th>
+            <th class="text-center">Category</th>
+            <th class="text-center">Info</th>
+            <th class="text-center"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (tran t in Model)
+        {
+            <tr>
+                <td class="text-center">
+                    @t.trans_type.type_value
+                </td>
+                <td class="text-center">
+                    @String.Format("{0:MMM dd yyyy}", t.t_date)
+                </td>
+                <td class="text-center">
+                    @String.Format("{0:N0} VND", t.t_sum)
+                </td>
+                <td class="text-center">
+                    @t.category.c_value
+                </td>
+                <td class="text-center">
+                    @t.t_info
+                </td>
+                <td class="text-center">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#detailModal" onclick="load_detail(@t.t_id)">
+                        View
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@Html.PagedListPager(Model, page => Url.Action("AllTransaction", new
+    {
+        page
+    }))
+
+
+<!-- Modal -->
+<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Transaction Detail</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+    function load_detail(tid) {
+            $.post("@Url.Action("PV_Detail")",
+                {
+                    tid: tid
+                },
+                function (data, status) {
+                    if (status == "success") {
+                        $("#modal-body").html(data);
+                    }
+                });
+    }
+
+    $(document).ready(function () {
+
+        // jQuery methods go here...
+
+    });
+    </script>
+}

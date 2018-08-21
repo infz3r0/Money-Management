@@ -52,7 +52,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="modal-body">
                 
             </div>
             <div class="modal-footer">
@@ -61,3 +61,26 @@
         </div>
     </div>
 </div>
+
+@section scripts
+{
+<script>
+    function load_detail(tid) {
+            $.post("@Url.Action("PV_Detail")",
+                {
+                    tid: tid
+                },
+                function (data, status) {
+                    if (status == "success") {
+                        $("#modal-body").html(data);
+                    }
+                });
+    }
+
+    $(document).ready(function () {
+
+        // jQuery methods go here...
+
+    });
+</script>
+}

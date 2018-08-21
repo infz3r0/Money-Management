@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Money_Management.Models;
+using PagedList;
 
 namespace Money_Management.Controllers
 {
@@ -32,6 +33,28 @@ namespace Money_Management.Controllers
              
 
             return View(account_Money);
+        }
+
+        public ActionResult AllTransaction(int? page)
+        {
+            if (Session["Account"] == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            int aid = ((account)Session["Account"]).acc_id;
+            List<tran> trans = null;
+            if (ModelState.IsValid)
+            {
+                using (var db = new money_managementEntities())
+                {
+                    trans = db.trans.Include("trans_type").Include("category").Where(x => x.acc_id == aid).OrderByDescending(x=>x.t_date).ToList();
+                }
+            }
+
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+            return View(trans.ToPagedList(pageNumber, pageSize));
         }
 
         public ActionResult Transaction()
@@ -196,6 +219,23 @@ namespace Money_Management.Controllers
             }
 
             return PartialView(trans);
+        }
+
+        [HttpPost]
+        public ActionResult PV_Detail(int tid)
+        {
+            int aid = ((account)Session["Account"]).acc_id;
+            List<trans_detail> details = null;
+
+            if (ModelState.IsValid)
+            {
+                using (var db = new money_managementEntities())
+                {
+                    details = db.trans_detail.Include("base_money").Where(x => x.t_id == tid && x.tran.acc_id == aid).ToList();
+                }
+            }
+
+            return PartialView(details);
         }
         #endregion
 

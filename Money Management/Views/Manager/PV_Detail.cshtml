@@ -1,0 +1,31 @@
+﻿@using Money_Management.Models
+@model List<trans_detail>
+
+<div class="row justify-content-center">
+    <div class="col-6">
+        <table class="table table-responsive">
+            <thead class="thead-dark">
+                <tr>
+                    <th class="text-center">Money</th>
+                    <th class="text-center">Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (trans_detail t in Model)
+                {
+                    <tr>
+                        <td class="text-center">
+                            @String.Format("{0:N0} VND", t.base_money.bm_value)
+                        </td>
+                        <td class="text-center">
+                            @t.t_quantity
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
